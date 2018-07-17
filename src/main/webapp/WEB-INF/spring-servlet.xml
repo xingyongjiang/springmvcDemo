@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	 <!-- 自动注册组件 -->
+     <mvc:annotation-driven/>
+     
+     <!-- 通过扫描将带有@Controller注解的类交由spring容器管理并维护 -->
+     <context:component-scan base-package="com.zhibei.controller"/>
+ 
+     <!-- 配置视图解析器 如果不配置ViewResolver,Spring MVC默认使用org.springframework.web.servlet.view.InternalResourceViewResolver作为
+     ViewResolver,而且prefix和suffix都为空 -->
+     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+         <property name="prefix" value="/WEB-INF/html/"></property>
+         <property name="suffix" value=".html"></property>
+     </bean>
+     
+     <!-- session超时 -->
+     <mvc:interceptors>   
+      <mvc:interceptor>
+        <mvc:mapping path="/*"/><!-- 此处将拦截所有包含三层路径的所有URL请求，可以根据个人使用的实际情况进行修改 -->
+        <bean class="com.zhibei.interceptor.SessionTimeoutInterceptor">
+          <property name="allowUrls">
+            <list>
+              <!-- 如果请求中包含以下路径，则不进行拦截 -->
+              <value>/login</value>
+              <value>/logout</value>
+              <value>/js</value>
+              <value>/css</value>
+              <value>/image</value>
+              <value>/images</value>
+            </list>
+          </property>
+        </bean>
+      </mvc:interceptor>
+    </mvc:interceptors>
+      
+</beans> 
